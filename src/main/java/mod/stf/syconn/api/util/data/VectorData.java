@@ -124,6 +124,7 @@ public class VectorData { // TODO MAKE VECTOR DATA SAVABLE TO NBT
         });
         tag.put("faces", listTag);
         ListTag listTag2 = new ListTag();
+        System.out.println(fluidValues.size());
         fluidValues.forEach((dir, b) -> {
             CompoundTag d = new CompoundTag();
             d.putInt("dir", dir.get3DDataValue());

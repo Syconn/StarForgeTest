@@ -30,22 +30,26 @@ public class MapBe extends ClientBlockEntity {
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, MapBe be) {
+        boolean update = false;
         if (level.getCapability(ChunkManager.CHUNKS).isPresent()) {
             ChunkData cap = level.getCapability(ChunkManager.CHUNKS).resolve().get();
-            if (map_update < 1000) map_update++;
-            else if (!be.selectedPos.equals(BlockPos.ZERO)) be.chunkHandler = cap.getChunkHandler(be.selectedPos, level);
+            if (map_update < 1000) { map_update++; }
+            else if (!be.selectedPos.equals(BlockPos.ZERO)) { map_update = 0; be.chunkHandler = cap.getChunkHandler(be.selectedPos, level); update = true; }
             if (receiving_signal < 350) receiving_signal++;
             else {
                 receiving_signal = 0;
                 if (!be.selectedPos.equals(BlockPos.ZERO) && !cap.getChunkOptions(pos).contains(be.selectedPos)) {
                     be.selectedPos = BlockPos.ZERO;
                     be.chunkHandler = new ChunkHandler();
+                    update = true;
                 }
             }
         }
-        if (!be.chunkHandler.getChunks().isEmpty() && state.getValue(MapProjector.TOP)) level.setBlock(pos, state.setValue(MapProjector.TOP, false), 2);
-        else if (be.chunkHandler.getChunks().isEmpty() && !state.getValue(MapProjector.TOP)) level.setBlock(pos, state.setValue(MapProjector.TOP, true), 2);
-        update(level, pos, state);
+        if (update) {
+//            update(level, pos, state);
+        }
+        if (!be.chunkHandler.getChunks(false).isEmpty() && state.getValue(MapProjector.TOP)) level.setBlock(pos, state.setValue(MapProjector.TOP, false), 2);
+        else if (be.chunkHandler.getChunks(false).isEmpty() && !state.getValue(MapProjector.TOP)) level.setBlock(pos, state.setValue(MapProjector.TOP, true), 2);
     }
 
     public List<BlockPos> setSelections() {

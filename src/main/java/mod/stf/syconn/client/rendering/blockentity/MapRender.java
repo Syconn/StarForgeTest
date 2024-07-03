@@ -27,15 +27,16 @@ public class MapRender implements BlockEntityRenderer<MapBe> {
 
     public void render(MapBe pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
         ChunkHandler handler = pBlockEntity.getChunkHandler();
-        if (mc.level.getBlockState(pBlockEntity.getBlockPos()).getBlock() == ModBlocks.MAP_PROJECTOR.get() && !handler.getChunks().isEmpty()) {
+        if (mc.level.getBlockState(pBlockEntity.getBlockPos()).getBlock() == ModBlocks.MAP_PROJECTOR.get() && !handler.getChunks(false).isEmpty()) {
             pPoseStack.pushPose();
             if (pBlockEntity.isFastRender()) { pPoseStack.translate(0.025, 0.5015, 0.025); pPoseStack.scale(Scale3x3, Scale3x3, Scale3x3); }
             else { pPoseStack.translate(0.21, 0.5264, 0.214); pPoseStack.scale(Scale5x5, Scale5x5, Scale5x5); }
-            for (ChunkInfo data : handler.getProcessedChunks(pBlockEntity.isFastRender())) { // TODO Need to add edge faces for 3x3
+            for (ChunkInfo data : handler.getChunks(pBlockEntity.isFastRender())) { // TODO Need to add edge faces for 3x3
                 pPoseStack.pushPose();
                 pPoseStack.translate(data.getX() * 16, 0, data.getZ() * 16);
-                for (BlockInChunkData blockInChunkData : data.getBlocks()) blockInChunkData.render(pPoseStack, pBufferSource, pPackedLight, handler.getRenderY(), pBlockEntity.isFastRender());
-                if (pBlockEntity.isFastRender()) for (BlockInChunkData blockInChunkData : data.getFastBlocks()) blockInChunkData.render(pPoseStack, pBufferSource, pPackedLight, handler.getRenderY(), pBlockEntity.isFastRender());;
+                if (!pBlockEntity.isFastRender())  for (BlockInChunkData blockInChunkData : data.getBlocks()) blockInChunkData.render(pPoseStack, pBufferSource, pPackedLight, handler.getRenderY(), pBlockEntity.isFastRender());
+                // TODO WHY IS THE BOTTOM THING FREEZING SERVER
+                else for (BlockInChunkData blockInChunkData : data.getBlocks()) blockInChunkData.render(pPoseStack, pBufferSource, pPackedLight, handler.getRenderY(), pBlockEntity.isFastRender());;
                 pPoseStack.popPose();
             }
             pPoseStack.popPose();

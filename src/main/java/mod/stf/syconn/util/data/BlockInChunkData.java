@@ -59,7 +59,7 @@ public class BlockInChunkData {
         pPoseStack.popPose();
     }
 
-    public CompoundTag save() {
+    public CompoundTag save() { // TODO MAY BE SAVING TO MUCH
         CompoundTag tag = new CompoundTag();
         tag.put("pos", NbtUtils.writeBlockPos(pos));
         tag.put("state", NbtUtils.writeBlockState(state));

@@ -95,7 +95,7 @@ public class ChunkInfo {
             for (Direction d : Direction.values()) {
                 BlockState state = level.getBlockState(pos.relative(d));
                 if (!state.canOcclude() && state.getFluidState().isEmpty())
-                    if (level.getBrightness(LightLayer.SKY, pos.relative(d)) > 4)
+                    if (level.getBrightness(LightLayer.SKY, pos.relative(d)) > 2)
                         return true;
                 if (!Block.isShapeFullBlock(state.getShape(level, pos.relative(d))) && d != Direction.UP && !state.getFluidState().isEmpty() && // WTF DOES THIS DO (IDR)
                         !(!state.getFluidState().isEmpty() && level.getBlockState(pos.relative(d).relative(Direction.UP)).getFluidState().isEmpty())) return true;
